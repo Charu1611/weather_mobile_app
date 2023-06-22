@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, ActivityIndicator, Image, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, Button, TextInput, ActivityIndicator, Image } from 'react-native';
 import axios from 'axios';
 import Moment from 'react-moment';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -22,15 +22,14 @@ export default function WeatherApp() {
   const [isLoading, setIsLoading] = useState(false);
   const [nodata, setNodata] = useState(false);
 
-  // useEffect(() => {
-  //   if (latitude && longitude) {
+  useEffect(() => {
+    if (latitude && longitude) {
 
-  //     getWeather();
-  //   }
-  // }, [latitude , longitude]);
+      getWeather();
+    }
+  }, [latitude, longitude]);
 
   const getPosition = async () => {
-    Keyboard.dismiss();
     try {
       setNodata(false)
         setIsLoading(true);
@@ -41,7 +40,6 @@ export default function WeatherApp() {
       setLatitude(response.data[0].lat);
       setLongitude(response.data[0].lon);
       setPrevCity(city);
-      getWeather(response.data[0].lat,response.data[0].lon);
     } catch (error) {
       console.log('errorlocation----', error);
       setIsLoading(false);
@@ -52,12 +50,12 @@ export default function WeatherApp() {
     }
   };
 
-  const getWeather = async (lat,lon) => {
+  const getWeather = async () => {
     try {
       const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=c79b6cb39826aca9755ade5999cd13bd`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=c79b6cb39826aca9755ade5999cd13bd`
       );
-        console.log('weatherApiRes------',response.data);
+
       setTemp((response.data.main.temp - 273).toFixed(1));
       setDescription(response.data.weather[0].description);
       setFeelslike((response.data.main.feels_like - 273).toFixed(2))
@@ -95,10 +93,10 @@ export default function WeatherApp() {
 {nodata && (
   <Text style={{
     flex: 1,
-    fontSize: 15,
-    color: 'grey',
-    fontWeight: 'bold',marginTop:30
-  }}>No such city exist...🥹 </Text>
+    fontSize: 20,
+    color: 'red',
+    fontWeight: 'bold'
+  }}>No such city exist... </Text>
 )}
       {!nodata && isLoading ? (
         <ActivityIndicator size="large" color="#841584" />

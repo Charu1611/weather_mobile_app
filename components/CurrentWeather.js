@@ -50,6 +50,7 @@ export default function CurrentWeather() {
       console.log('res-----', response.data, latitude, longitude);
     } catch (error) {
       console.log('error----', error, latitude, longitude);
+      
     }
     setLoading(false);
   };
